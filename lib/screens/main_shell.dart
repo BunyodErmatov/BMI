@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
+import '../utils/app_state.dart';
 import 'home_screen.dart';
 import 'subjects_screen.dart';
 import 'statistics_screen.dart';
@@ -19,36 +21,108 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
-  int _totalTests = 12;
-  final double _avgScore = 78;
-  final double _bestScore = 92;
-  final List<Map<String, dynamic>> _recentResults = [
-    {
-      'subject': 'Matematika testi',
-      'date': '20.01.2024',
-      'score': 85,
-      'icon': 'Σ',
-      'color': Color(0xFF7C3AED),
-    },
-    {
-      'subject': 'Dasturlash testi',
-      'date': '18.01.2024',
-      'score': 70,
-      'icon': '</>',
-      'color': Color(0xFF0891B2),
-    },
-  ];
+  // Dastur ishga tushganda o'qiladigan lokal o'zgaruvchilar
+  int _totalTests = 0;
+  double _avgScore = 0.0;
+  double _bestScore = 0.0;
+  List<Map<String, dynamic>> _recentResults = [];
 
+  // Mahalliy ma'lumotlar bazasidan testlar tarixini Json shaklida o'qib kelish
+  void _loadData() {
+    _totalTests = AppState.prefs.getInt('totalTests') ?? 0;
+    _avgScore = AppState.prefs.getDouble('avgScore') ?? 0.0;
+    _bestScore = AppState.prefs.getDouble('bestScore') ?? 0.0;
+
+    final resultStr = AppState.prefs.getString('recentResults');
+    if (resultStr != null) {
+      final List decoded = jsonDecode(
+        resultStr,
+      ); // String (Matn) ni yana List ga aylantiramiz
+      _recentResults = decoded
+          .map(
+            (e) => {
+              'subject': e['subject'],
+              'date': e['date'],
+              'score': e['score'],
+              'icon': e['icon'],
+              'color': Color(
+                e['colorValue'] ?? 0xFF000000,
+              ), // Rng kodi bilan uni Widget Rangi formatida tiklash (Color)
+            },
+          )
+          .toList()
+          .cast<Map<String, dynamic>>();
+    }
+  }
+
+  // Umumiy ko'rsatkichlarni (O'rtacha ball, Eng yuqori ball) matematik hisoblash
+  void _updateStats() {
+    if (_recentResults.isEmpty) {
+      _avgScore = 0.0;
+      _bestScore = 0.0;
+      _totalTests = 0;
+      return;
+    }
+    _totalTests = _recentResults.length;
+    double sum = 0;
+    double best = 0;
+    for (var r in _recentResults) {
+      double score = (r['score'] as num).toDouble();
+      sum += score;
+      if (score > best) best = score; // Rekord yangilanishi
+    }
+    _avgScore =
+        sum /
+        _recentResults
+            .length; // Umumiy uchni testlar soniga bo'lish (O'rtacha miqdor)
+    _bestScore = best;
+  }
+
+  // Natijalarni yig'ib xotiraga Encode JSON qilib yozib qoyish
+  void _saveData() {
+    AppState.prefs.setInt('totalTests', _totalTests);
+    AppState.prefs.setDouble('avgScore', _avgScore);
+    AppState.prefs.setDouble('bestScore', _bestScore);
+
+    // List ro'yxatini String dagi JSON format holida saqlaymiz.
+    final String resultStr = jsonEncode(
+      _recentResults
+          .map(
+            (e) => {
+              'subject': e['subject'],
+              'date': e['date'],
+              'score': e['score'],
+              'icon': e['icon'],
+              'colorValue': (e['color'] as Color)
+                  .value, // Rangini int (Raqam) qilib saqlaymiz sababi JSONda Color widget saqlab bo'lmaydi.
+            },
+          )
+          .toList(),
+    );
+    AppState.prefs.setString(
+      'recentResults',
+      resultStr,
+    ); // SharedPreferences ga yozish
+  }
+
+  // Yangi ishlangan test kelib tushganda funksiya shu yerdan eng birinchi bo'lib ro'yxatga kiritadi
   void addResult(Map<String, dynamic> result) {
     setState(() {
-      _recentResults.insert(0, result);
-      _totalTests++;
+      _recentResults.insert(
+        0,
+        result,
+      ); // 0-indeks: ro'yxatni eng boshiga qoshish
+      _updateStats(); // Matematik hisoblash chaqiriladi
+      _saveData(); // Yangi arxivlanga ma'lumotlarni saqlash uzatiladi
     });
   }
 
+  // Statistikadan Swipe (surilib o'chirilishi bilan shu funksiya ishlaydi)
   void removeResult(int index) {
     setState(() {
       _recentResults.removeAt(index);
+      _updateStats();
+      _saveData();
     });
   }
 
@@ -57,6 +131,7 @@ class _MainShellState extends State<MainShell> {
   @override
   void initState() {
     super.initState();
+    _loadData();
     _buildScreens();
   }
 

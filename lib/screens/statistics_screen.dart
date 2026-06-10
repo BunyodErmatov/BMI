@@ -165,14 +165,20 @@ class StatisticsScreen extends StatelessWidget {
     );
   }
 
+  // Natijani bitta kartochkasi qanday chizilishi
   Widget _resultCard(Map<String, dynamic> item, int index) {
     final Color color = item['color'];
-    final bool passed = item['score'] >= 60;
+    final bool passed =
+        item['score'] >= 60; // 60 dan yuqori ballni to'g'ri deb qabul qilish
 
+    // Dismissible = Elementni barmog'imiz bilan Chapga yoki o'ngga surganimizda (Swipe) o'chirish imkonini beruvchi maxsus Widget
     return Dismissible(
-      key: UniqueKey(),
-      direction: DismissDirection.endToStart,
+      key:
+          UniqueKey(), // Har bir kartochkani aniq topib o'chirish uchun Noyob Kalit
+      direction: DismissDirection
+          .endToStart, // Faqat O'ngdan-Chapga surilganda ishlaydi
       background: Container(
+        // Surilayotgan payt orqasidan ko'rinib keladigan Qizil o'chirish Ikonkasi (UI xavfsizlik va go'zallik)
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
@@ -182,6 +188,7 @@ class StatisticsScreen extends StatelessWidget {
         alignment: Alignment.centerRight,
         child: const Icon(Icons.delete_rounded, color: Colors.white),
       ),
+      // Oxirigacha surib bo'lingandan so'ng xotiradan (MainShell dagi removeResult) index boyicha tozalab yuborish
       onDismissed: (_) => onDeleteResult?.call(index),
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),

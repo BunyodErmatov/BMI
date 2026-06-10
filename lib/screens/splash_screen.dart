@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import 'language_screen.dart';
+import 'main_shell.dart';
+import '../utils/app_state.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,13 +34,28 @@ class _SplashScreenState extends State<SplashScreen>
       begin: 0.7,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
+    // Ekrandagi yozuv animatsiyasi boshlanishi
     _controller.forward();
 
+    // 3 soniyalik sun'iy kutish orqali Splash ekranni ushlab turamiz -> so'ngra ishga tushadi
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const LanguageScreen()),
-        );
+        // Mahalliy xotiradan "studentName" kaliti orqali Talaba ismini o'qib olamiz
+        final savedName = AppState.prefs.getString('studentName');
+
+        // Agar ism bo'sh bo'lmasa, dasturga oldin kirilgan bo'ladi. To'g'ridan to'g'ri Home(MainShell) ochiladi
+        if (savedName != null && savedName.trim().isNotEmpty) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => MainShell(studentName: savedName),
+            ),
+          );
+        } else {
+          // Aks holda dastur yangi ochilgan deb hisoblanadi va Til tanlovi (LanguageScreen) ga o'tkazadi
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const LanguageScreen()),
+          );
+        }
       }
     });
   }

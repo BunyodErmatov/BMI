@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
+import '../utils/app_state.dart';
 import 'main_shell.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,16 +16,27 @@ class _LoginScreenState extends State<LoginScreen> {
   final _nameCtrl = TextEditingController();
   bool _isLoading = false;
 
+  // Login tugmasi bosilganda ishga tushadigan funksiya
   void _login() async {
+    // Agar Ism maydoni bo'sh qoldirilgan bo'lsa Snackbar (pastki xabar) chiqaramiz
     if (_nameCtrl.text.trim().isEmpty) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(L.t('fill_all'))));
       return;
     }
+
+    // UI (ekran) da yuklanayotgan aylana (CircularProgressIndicator) ko'rsatish
     setState(() => _isLoading = true);
+
+    // Server bilan qilib bo'lmasa-da sun'iy kutish orqali haqiqiy dastur hissini beramiz
     await Future.delayed(const Duration(milliseconds: 1200));
+
     if (mounted) {
+      // Talaba ismini xotiraga yozib qoyamiz. "studentName" => "Bunyod"
+      AppState.prefs.setString('studentName', _nameCtrl.text.trim());
+
+      // Bosh sahifaga o'tkazish. Orqaga qaytish imkoni bo'lmasligi uchun pushReplacement ishlatiladi.
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => MainShell(studentName: _nameCtrl.text.trim()),

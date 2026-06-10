@@ -45,15 +45,17 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
+  // Variant tanlanganda ishga tushadigan tekshiruv (Tekshiruv logikasi)
   void _selectOption(int index) {
-    if (_answered) return;
+    if (_answered) return; // Ikki marta bosilib ketishni oldini olish
     setState(() {
       _selectedOption = index;
       _answered = true;
+      // Tanlangan index Asosiy (To'g'ri) index bilan bir xil ekani tekshiriladi
       if (index == widget.subject.questions[_currentIndex].correctIndex) {
-        _correctCount++;
+        _correctCount++; // To'g'ri javobga +1
       } else {
-        _wrongCount++;
+        _wrongCount++; // Xato javobga +1
       }
     });
 
@@ -70,13 +72,14 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
+  // Test to'liq tugatilganda Natijani (Score, subject) chiqarib berish va Home oynasiga xabar qilish
   void _finishQuiz() {
-    _timer?.cancel();
+    _timer?.cancel(); // Vaqt hisoblashni to'xtatish
     final total = widget.subject.questions.length;
-    final score = (_correctCount / total * 100).round();
+    final score = (_correctCount / total * 100)
+        .round(); // Foiz hisoblash m: 24/25*100
 
-    // Nomi lokalizatsiya qilingan yoki yo'q, shunchaki object name + test stringni qoldiramiz
-    // yoki subject nomini ruschaga ham qila olamiz, asosiysi fan belgisi va qolgan detallar kerak
+    // Nomi lokalizatsiya qilingan (Hali tarjima logikasi ulanmagan original name qoladi)
     final result = {
       'subject': widget.subject.name,
       'date':
@@ -85,7 +88,10 @@ class _QuizScreenState extends State<QuizScreen> {
       'icon': widget.subject.icon,
       'color': widget.subject.color,
     };
+    // ResultScreen dan oldin callback orqali MainShell ga statistika yig'ishtiriladi
     widget.onFinished(result);
+
+    // Natijalar (ResultsScreen) oynasiga yo'naltirish
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (_) => ResultsScreen(
@@ -201,7 +207,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          q.question,
+                          q.askQuestion,
                           style: GoogleFonts.poppins(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -238,7 +244,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   const SizedBox(height: 24),
 
                   // Options
-                  ...List.generate(q.options.length, (i) {
+                  ...List.generate(q.askOptions.length, (i) {
                     final label = String.fromCharCode(65 + i); // A, B, C, D
                     Color bgColor = AppColors.white;
                     Color borderColor = AppColors.border;
@@ -312,7 +318,7 @@ class _QuizScreenState extends State<QuizScreen> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                q.options[i],
+                                q.askOptions[i],
                                 style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,

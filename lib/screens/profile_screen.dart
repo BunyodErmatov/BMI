@@ -198,6 +198,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _divider(),
                       GestureDetector(
                         onTap: () {
+                          // "studentName" kaliti orqali Tizimdan chiqish (Ismni xotiradan tozalash / o'chirish)
+                          AppState.prefs.remove('studentName');
+
+                          // Tizimdan chiqilgandan keyin orqaga umuman qaytib bo'lmaydigan qilib yopish va
+                          // Login ekranni (LoginScreen) boshidan ochish. (pushAndRemoveUntil)
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                               builder: (_) => const LoginScreen(),

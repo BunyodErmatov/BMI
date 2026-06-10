@@ -1,17 +1,44 @@
 import 'package:flutter/material.dart';
+import '../utils/app_state.dart';
+import 'app_test_translations.dart';
 
 class QuestionModel {
   final String question;
+  final Map<String, String>? localizedQuestions;
   final List<String> options;
+  final Map<String, List<String>>? localizedOptions;
   final int correctIndex;
   final String? formula;
 
   const QuestionModel({
     required this.question,
+    this.localizedQuestions,
     required this.options,
+    this.localizedOptions,
     required this.correctIndex,
     this.formula,
   });
+
+  // "askQuestion" maxsus getteri: Savolning asl o'rniga hozirgi tilni tekshirib tarjimasini qaytaradi
+  String get askQuestion {
+    if (localizedQuestions != null) {
+      final lang = AppState.language.value;
+      if (localizedQuestions!.containsKey(lang))
+        return localizedQuestions![lang]!;
+    }
+    return tMock(
+      question,
+    ); // Agar maxsus tarjima yo'q bo'lsa globalDictionary(tMock) ga so'rov yuboradi
+  }
+
+  // Variantlarni (A, B, C, D) ham mos ravishda tarjima bilan qaytaruvchi getter
+  List<String> get askOptions {
+    if (localizedOptions != null) {
+      final lang = AppState.language.value;
+      if (localizedOptions!.containsKey(lang)) return localizedOptions![lang]!;
+    }
+    return options.map((o) => tMock(o)).toList();
+  }
 }
 
 class SubjectModel {

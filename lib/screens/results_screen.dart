@@ -3,11 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 
+// Test yakunida ko'rsatiladigan Natija (Results) ekrani
 class ResultsScreen extends StatelessWidget {
-  final int correctCount;
-  final int wrongCount;
-  final int totalCount;
-  final int score;
+  // Avvalgi (QuizScreen) dan oqib keladigan ma'lumotlar
+  final int correctCount; // To'g'ri topilganlar soni
+  final int wrongCount; // Xato qilinganlar soni
+  final int totalCount; // Jami savollar soni
+  final int score; // Bali (%)
 
   const ResultsScreen({
     super.key,
@@ -19,8 +21,13 @@ class ResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Baholash logikasi: Agar 60 foizdan yuqori to'plansa "O'tdi" degan mantiq ishlaydi
     bool isPassed = score > 60;
+
+    // O'tgan bo'lsa Yashil (Success), Aks holda Qizil (Warning/Error) rang beramiz
     Color resultColor = isPassed ? AppColors.success : AppColors.warning;
+
+    // Yuzidagi ikonkasini ham shunga qarab almashtiramiz: O'tsa (Kubok), o'tolmasa (Qayta urunish-Replay) ikonkasini ko'rsatamiz
     IconData resultIcon = isPassed
         ? Icons.emoji_events_rounded
         : Icons.replay_rounded;
@@ -68,9 +75,12 @@ class ResultsScreen extends StatelessWidget {
                       SizedBox(
                         width: 150,
                         height: 150,
+                        // Bu qism Dumaloq orqali Olinag ball vizualizatsiyasini yasaydi chiziq ko'rinishida
                         child: CircularProgressIndicator(
-                          value: score / 100,
-                          strokeWidth: 12,
+                          value:
+                              score /
+                              100, // Foizni 0..1 gacha decimal(o'nlik) formatda beradi
+                          strokeWidth: 12, // Chiziq qalinligi
                           backgroundColor: AppColors.divider,
                           color: resultColor,
                           strokeCap: StrokeCap.round,
@@ -156,14 +166,14 @@ class ResultsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 48),
 
-              // Action Buttons
+              // Action Buttons (Pastdagi tugmalar)
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
+                      // "Qayta urunish" (Retry) tugmasiga bosilganda oyna orqaga bitta suriladi, ya'ni Home pagedan yana yangidan Test ekraniga qaytilishi kerak
                       onPressed: () {
-                        // Qayta ishlash logikasi - subject qayta olib o'tilishi mumkin
-                        Navigator.pop(context);
+                        Navigator.pop(context); // Oynani yopish
                       },
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
