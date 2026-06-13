@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
   shared_preferences: ^2.3.2
+  sqflite: ^2.3.3           # SQLite ma'lumotlar bazasi bilan ishlash uchun
+  path_provider: ^2.1.4     # Qurilmadagi fayl yo'lini aniqlash uchun (baza fayli joyi)
+  path: ^1.9.0              # Fayl yo'llarini birlashtirish uchun (join funksiyasi)
 
 dev_dependencies:
   flutter_test:

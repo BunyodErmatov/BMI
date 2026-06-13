@@ -349,16 +349,21 @@ final Map<String, Map<String, String>> globalDict = {
   },
 };
 
+/// tMock funksiyasi: Berilgan matni joriy tilga moslashtirib qaytaradi.
+/// 1) Agar UZ bo'lsa va lug'atda yo'q bo'lsa — asl matnni qaytaradi
+/// 2) Lug'atda tarjima topilsa — tarjimasini qaytaradi
+/// 3) Tarjima topilmasa — asl matnni o'zini qaytaradi (xato prefiks yo'q)
 String tMock(String text) {
   final lang = AppState.language.value;
-  if (lang == 'uz' && !globalDict.containsKey(text)) return text;
 
+  // O'zbek tili uchun tarjima shart emas — asl matnni qaytaramiz
+  if (lang == 'uz') return text;
+
+  // Lug'atda shu matn va shu til tarjimasi bor bo'lsa — tarjimasini qaytaramiz
   if (globalDict.containsKey(text) && globalDict[text]!.containsKey(lang)) {
     return globalDict[text]![lang]!;
   }
 
-  if (lang == 'uz') return text;
-  if (lang == 'ru') return 'ru_ $text';
-  if (lang == 'en') return 'en_ $text';
+  // Tarjima topilmasa — asl matnni qaytaramiz (prefiks qo'shmaymiz)
   return text;
 }

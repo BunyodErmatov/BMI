@@ -260,7 +260,9 @@ class HomeScreen extends StatelessWidget {
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
       backgroundColor: AppColors.background,
-      child: Column(
+      // ListView ishlatiladi — landscape (yotiq) holatda ham scroll qilish uchun
+      child: ListView(
+        padding: EdgeInsets.zero, // DrawerHeader yuqoridan joy olmashi uchun
         children: [
           DrawerHeader(
             decoration: const BoxDecoration(

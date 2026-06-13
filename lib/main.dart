@@ -9,7 +9,7 @@ void main() async {
   // Dastur ishga tushishidan oldin Flutter dvigateli to'liq tayyor ekanini tekshiradi
   WidgetsFlutterBinding.ensureInitialized();
 
-  // AppState yordamida SharedPreferences (mahalliy xazarli baza) ni ilova ochilganda ulab o'qiymiz
+  // AppState yordamida SharedPreferences  ni ilova ochilganda ulab o'qiymiz
   await AppState.init();
 
   // Status bar (tepadagi batareya, soat chiqadigan joy) dizaynini o'rnatish

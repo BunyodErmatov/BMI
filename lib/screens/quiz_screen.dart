@@ -166,248 +166,244 @@ class _QuizScreenState extends State<QuizScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Progress bar
-          Container(
-            height: 4,
-            color: AppColors.white,
-            alignment: Alignment.centerLeft,
-            child: FractionallySizedBox(
-              widthFactor: progress,
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: AppColors.primaryGradient,
+      body: SafeArea(
+        // SafeArea - landscape holatda notch/toolbar bilan to'qnashuvni oldini oladi
+        child: Column(
+          children: [
+            // Progress bar (savollar qancha qolganini ko'rsatuvchi chiziq)
+            Container(
+              height: 4,
+              color: AppColors.white,
+              alignment: Alignment.centerLeft,
+              child: FractionallySizedBox(
+                widthFactor: progress,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: AppColors.primaryGradient,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Question card
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          q.askQuestion,
-                          style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textDark,
-                            height: 1.5,
-                          ),
-                        ),
-                        if (q.formula != null) ...[
-                          const SizedBox(height: 12),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 16,
-                              horizontal: 20,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primarySurface,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              q.formula!,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.primary,
-                              ),
-                            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Question card
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
                           ),
                         ],
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Options
-                  ...List.generate(q.askOptions.length, (i) {
-                    final label = String.fromCharCode(65 + i); // A, B, C, D
-                    Color bgColor = AppColors.white;
-                    Color borderColor = AppColors.border;
-                    Color textColor = AppColors.textDark;
-                    Color labelBg = AppColors.divider;
-                    Color labelText = AppColors.textMedium;
-
-                    if (_answered) {
-                      if (i == q.correctIndex) {
-                        bgColor = AppColors.success.withValues(alpha: 0.08);
-                        borderColor = AppColors.success;
-                        textColor = AppColors.success;
-                        labelBg = AppColors.success;
-                        labelText = Colors.white;
-                      } else if (i == _selectedOption && i != q.correctIndex) {
-                        bgColor = AppColors.error.withValues(alpha: 0.08);
-                        borderColor = AppColors.error;
-                        textColor = AppColors.error;
-                        labelBg = AppColors.error;
-                        labelText = Colors.white;
-                      }
-                    } else if (_selectedOption == i) {
-                      bgColor = AppColors.primarySurface;
-                      borderColor = AppColors.primary;
-                      textColor = AppColors.primary;
-                      labelBg = AppColors.primary;
-                      labelText = Colors.white;
-                    }
-
-                    return GestureDetector(
-                      onTap: () => _selectOption(i),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        decoration: BoxDecoration(
-                          color: bgColor,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: borderColor, width: 1.5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.03),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            q.askQuestion,
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textDark,
+                              height: 1.5,
+                            ),
+                          ),
+                          if (q.formula != null) ...[
+                            const SizedBox(height: 10),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primarySurface,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                q.formula!,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.primary,
+                                ),
+                              ),
                             ),
                           ],
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: labelBg,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  label,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                    color: labelText,
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Options (A, B, C, D variantlar)
+                    ...List.generate(q.askOptions.length, (i) {
+                      final label = String.fromCharCode(65 + i); // A, B, C, D
+                      Color bgColor = AppColors.white;
+                      Color borderColor = AppColors.border;
+                      Color textColor = AppColors.textDark;
+                      Color labelBg = AppColors.divider;
+                      Color labelText = AppColors.textMedium;
+
+                      if (_answered) {
+                        if (i == q.correctIndex) {
+                          bgColor = AppColors.success.withValues(alpha: 0.08);
+                          borderColor = AppColors.success;
+                          textColor = AppColors.success;
+                          labelBg = AppColors.success;
+                          labelText = Colors.white;
+                        } else if (i == _selectedOption &&
+                            i != q.correctIndex) {
+                          bgColor = AppColors.error.withValues(alpha: 0.08);
+                          borderColor = AppColors.error;
+                          textColor = AppColors.error;
+                          labelBg = AppColors.error;
+                          labelText = Colors.white;
+                        }
+                      } else if (_selectedOption == i) {
+                        bgColor = AppColors.primarySurface;
+                        borderColor = AppColors.primary;
+                        textColor = AppColors.primary;
+                        labelBg = AppColors.primary;
+                        labelText = Colors.white;
+                      }
+
+                      return GestureDetector(
+                        onTap: () => _selectOption(i),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: bgColor,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: borderColor, width: 1.5),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: labelBg,
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    label,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: labelText,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                q.askOptions[i],
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: textColor,
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  q.askOptions[i],
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: textColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            ),
+
+            // Bottom bar (To'g'ri/Xato hisobi va Keyingi tugma)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              color: AppColors.white,
+              child: Row(
+                children: [
+                  _quizStat(
+                    Icons.check_circle_rounded,
+                    '$_correctCount',
+                    AppColors.success,
+                  ),
+                  const SizedBox(width: 12),
+                  _quizStat(
+                    Icons.cancel_rounded,
+                    '$_wrongCount',
+                    AppColors.error,
+                  ),
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: _answered
+                        ? () {
+                            if (_currentIndex < total - 1) {
+                              setState(() {
+                                _currentIndex++;
+                                _selectedOption = null;
+                                _answered = false;
+                              });
+                            } else {
+                              _finishQuiz();
+                            }
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
                       ),
-                    );
-                  }),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 0,
+                      disabledBackgroundColor: AppColors.border,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _currentIndex < total - 1
+                              ? L.t('next_q')
+                              : L.t('finish'),
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(
+                          _currentIndex < total - 1
+                              ? Icons.arrow_forward_rounded
+                              : Icons.check_circle_outline,
+                          size: 15,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-
-          // Bottom bar
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            color: AppColors.white,
-            child: Row(
-              children: [
-                // Stats
-                _quizStat(
-                  Icons.check_circle_rounded,
-                  '$_correctCount',
-                  AppColors.success,
-                ),
-                const SizedBox(width: 16),
-                _quizStat(
-                  Icons.cancel_rounded,
-                  '$_wrongCount',
-                  AppColors.error,
-                ),
-                const Spacer(),
-                // Next
-                ElevatedButton(
-                  onPressed: _answered
-                      ? () {
-                          if (_currentIndex < total - 1) {
-                            setState(() {
-                              _currentIndex++;
-                              _selectedOption = null;
-                              _answered = false;
-                            });
-                          } else {
-                            _finishQuiz();
-                          }
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                    disabledBackgroundColor: AppColors.border,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        _currentIndex < total - 1
-                            ? L.t('next_q')
-                            : L.t('finish'),
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Icon(
-                        _currentIndex < total - 1
-                            ? Icons.arrow_forward_rounded
-                            : Icons.check_circle_outline,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
