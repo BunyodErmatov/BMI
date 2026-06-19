@@ -25,7 +25,7 @@ class _QuizScreenState extends State<QuizScreen> {
   int? _selectedOption;
   int _correctCount = 0;
   int _wrongCount = 0;
-  int _secsRemaining = 14 * 60 + 32; // 14:32
+  int _secsRemaining = 15 * 60; // 15:00
   Timer? _timer;
   bool _answered = false;
 
